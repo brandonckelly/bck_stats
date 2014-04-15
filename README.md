@@ -12,4 +12,4 @@ Description of routines:
 Installation
 -------------
 
-From the base directory type `python setup.py install` in a terminal shell.
+From the base directory type `python setup.py install` in a terminal.
