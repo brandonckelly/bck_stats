@@ -37,6 +37,9 @@ class GbcAutoNtrees(GradientBoostingClassifier):
         self.n_estimators = ntrees
         self.estimators_ = self.estimators_[:ntrees]
 
+        # plt.plot(oob_score)
+        # plt.show()
+
         return self
 
 
@@ -380,6 +383,7 @@ class ClassificationSuite(BasePredictorSuite):
 
         self.scorer = make_scorer(accuracy_score)
         self.nfeatures = n_features
+        self.classes = None
 
     def predict(self, X, weights='auto'):
         """
@@ -413,12 +417,17 @@ class ClassificationSuite(BasePredictorSuite):
                 # compute weighted vote for each class
                 y_votes[np.unravel_index(idx_1d, y_votes.shape)] += weights[name]
 
-            y_predict = y_votes.argmax(axis=1)  # output is winner of majority vote
+            y_predict = self.classes[y_votes.argmax(axis=1)]  # output is winner of majority vote
 
         else:
             y_predict = y_predict_all
 
         return y_predict
+
+    def fit(self, X, y, n_refinements=1):
+        classes, y = np.unique(y, return_inverse=True)
+        self.classes = classes
+        return super(ClassificationSuite, self).fit(X, y, n_refinements)
 
 
 class RegressionSuite(BasePredictorSuite):
