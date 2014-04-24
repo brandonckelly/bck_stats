@@ -126,7 +126,6 @@ def compute_cv_prediction(args):
     return y_predict
 
 
-
 class SupervisedPCA(SupervisedPCABase):
     def __init__(self, regressor, max_components=None, n_components=1, whiten=True, n_jobs=1):
         """

@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="047fd201-dd74-4894-b08f-be8529e03905" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bck_stats/sklearn_estimator_suite.py" afterPath="$PROJECT_DIR$/bck_stats/sklearn_estimator_suite.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/lib/bck_stats/sklearn_estimator_suite.py" afterPath="$PROJECT_DIR$/build/lib/bck_stats/sklearn_estimator_suite.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bck_stats/super_pca.py" afterPath="$PROJECT_DIR$/bck_stats/super_pca.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/lib/bck_stats/super_pca.py" afterPath="$PROJECT_DIR$/build/lib/bck_stats/super_pca.py" />
     </list>
     <ignored path="bck_stats.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -28,19 +32,66 @@
       <file leaf-file-name="setup.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/setup.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="20" selection-start="235" selection-end="235" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="165">
+            <state line="5" column="20" selection-start="235" selection-end="235" vertical-scroll-proportion="0.0" vertical-offset="75" max-vertical-offset="165">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="super_pca.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="super_pca.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bck_stats/super_pca.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="0" selection-start="29" selection-end="29" vertical-scroll-proportion="-0.5092593" vertical-offset="525" max-vertical-offset="4140">
+            <state line="136" column="0" selection-start="5893" selection-end="5893" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4125">
               <folding>
                 <element signature="e#29#47#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="react.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/bck_stats/react.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="142" column="27" selection-start="4829" selection-end="4829" vertical-scroll-proportion="0.28481805" vertical-offset="1903" max-vertical-offset="2940">
+              <folding>
+                <element signature="e#29#47#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="__init__.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bck_stats/__init__.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="120">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README.md" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="6" column="0" selection-start="126" selection-end="126" vertical-scroll-proportion="-3.6" vertical-offset="0" max-vertical-offset="330">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sklearn_estimator_suite.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bck_stats/sklearn_estimator_suite.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="6" column="16" selection-start="128" selection-end="128" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6600">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LICENSE.txt" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/LICENSE.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="420">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -60,14 +111,18 @@
       <list>
         <option value="$PROJECT_DIR$/__init__.py" />
         <option value="$PROJECT_DIR$/setup.py" />
+        <option value="$PROJECT_DIR$/bck_stats/super_pca.py" />
+        <option value="$PROJECT_DIR$/bck_stats/react.py" />
+        <option value="$PROJECT_DIR$/bck_stats/sklearn_estimator_suite.py" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="241" />
+    <option name="x" value="147" />
     <option name="y" value="22" />
     <option name="width" value="1424" />
-    <option name="height" value="1090" />
+    <option name="height" value="940" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -162,8 +217,8 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="241" y="22" width="1424" height="1090" extended-state="0" />
-    <editor active="false" />
+    <frame x="147" y="22" width="1424" height="940" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -201,6 +256,22 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/bck_stats/super_pca.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="0" selection-start="29" selection-end="29" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4140">
+          <folding>
+            <element signature="e#29#47#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/setup.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="20" selection-start="235" selection-end="235" vertical-scroll-proportion="0.0" vertical-offset="75" max-vertical-offset="165">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/setup.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="5" column="20" selection-start="235" selection-end="235" vertical-scroll-proportion="0.0" vertical-offset="75" max-vertical-offset="165">
@@ -215,9 +286,46 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/bck_stats/sklearn_estimator_suite.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="16" selection-start="128" selection-end="128" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6600">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LICENSE.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="822">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bck_stats/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="822">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="0" selection-start="126" selection-end="126" vertical-scroll-proportion="-3.6" vertical-offset="0" max-vertical-offset="330">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/bck_stats/super_pca.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="0" selection-start="29" selection-end="29" vertical-scroll-proportion="-0.5092593" vertical-offset="525" max-vertical-offset="4140">
+        <state line="136" column="0" selection-start="5893" selection-end="5893" vertical-scroll-proportion="0.0" vertical-offset="3303" max-vertical-offset="4125">
+          <folding>
+            <element signature="e#29#47#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bck_stats/react.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="142" column="27" selection-start="4829" selection-end="4829" vertical-scroll-proportion="0.28481805" vertical-offset="1903" max-vertical-offset="2940">
           <folding>
             <element signature="e#29#47#0" expanded="true" />
           </folding>

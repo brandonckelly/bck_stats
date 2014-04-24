@@ -2,7 +2,6 @@ __author__ = 'brandonkelly'
 
 import numpy as np
 import abc
-import matplotlib.pyplot as plt
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.grid_search import GridSearchCV, ParameterGrid
