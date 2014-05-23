@@ -21,7 +21,7 @@ class GbcAutoNtrees(GradientBoostingClassifier):
     Same as GradientBoostingClassifier, but the number of estimators is chosen automatically by maximizing the
     out-of-bag score.
     """
-    def __init__(self, subsample, loss='deviance', learning_rate=0.1, n_estimators=100, min_samples_split=2,
+    def __init__(self, subsample, loss='deviance', learning_rate=0.01, n_estimators=500, min_samples_split=2,
                  min_samples_leaf=1, max_depth=3, init=None, random_state=None, max_features=None, verbose=0):
         super(GbcAutoNtrees, self).__init__(loss, learning_rate, n_estimators, subsample, min_samples_split,
                                             min_samples_leaf, max_depth, init, random_state, max_features, verbose)
@@ -378,7 +378,7 @@ class ClassificationSuite(BasePredictorSuite):
             if 'RandomForestClassifier' in tuning_ranges:
                 models.append(RandomForestClassifier(n_estimators=500, oob_score=True, n_jobs=njobs))
             if 'GbcAutoNtrees' in tuning_ranges:
-                models.append(GbcAutoNtrees(subsample=0.5, n_estimators=1000, learning_rate=0.01))
+                models.append(GbcAutoNtrees(subsample=0.75, n_estimators=500, learning_rate=0.01))
 
         super(ClassificationSuite, self).__init__(tuning_ranges=tuning_ranges, models=models, cv=cv, njobs=njobs,
                                                   pre_dispatch=pre_dispatch, stack=stack, verbose=verbose)
