@@ -7,7 +7,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.grid_search import GridSearchCV, ParameterGrid
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.svm import LinearSVC
+from sklearn.svm import SVC, LinearSVC
 from sklearn.metrics import accuracy_score, make_scorer
 from sklearn.cross_validation import KFold
 from sklearn.base import clone
@@ -178,7 +178,6 @@ class BasePredictorSuite(object):
             # print 'New Grid:', self.tuning_ranges[model_name][param_name]
 
     def cross_validate(self, X, model_idx, y):
-        # fit tuning parameters for each model sequentially via cross-validation
         """
         Fit the tuning parameters for an estimator on a grid using cross-validation.
 
@@ -201,7 +200,6 @@ class BasePredictorSuite(object):
         return grid.best_estimator_, grid.best_score_, grid.best_params_
 
     def oob_validate(self, X, model_idx, y):
-        # fit tuning parameters for each ensemble model sequentially based on out-of-bag estimate of test error
         """
         Fit the tuning parameters for a Random Forest estimator on a grid by maximizing the score of the out-of-bag
         samples. This is faster than using cross-validation.
@@ -360,6 +358,9 @@ class ClassificationSuite(BasePredictorSuite):
             tuning_ranges = {'LogisticRegression': {'C': list(np.logspace(-3.0, 0.0, 5))},
                              'DecisionTreeClassifier': {'max_depth': [5, 10, 20, 50, None]},
                              'LinearSVC': {'C': list(np.logspace(-3.0, 0.0, 5))},
+                             'SVC': {'C': list(np.logspace(-3.0, 0.0, 5)),
+                                     'gamma': list(np.logspace(np.log10(1.0 / n_features),
+                                                               np.log10(1000.0 / n_features), 5))},
                              'RandomForestClassifier': {'max_features':
                                                         list(np.unique(np.linspace(2, n_features, 5).astype(np.int)))},
                              'GbcAutoNtrees': {'max_depth': [1, 2, 3, 5, 10]}}
@@ -372,6 +373,8 @@ class ClassificationSuite(BasePredictorSuite):
                 models.append(DecisionTreeClassifier())
             if 'LinearSVC' in tuning_ranges:
                 models.append(LinearSVC(penalty='l1', loss='l2', dual=False, class_weight='auto'))
+            if 'SVC' in tuning_ranges:
+                models.append(SVC(class_weight='auto'))
             if 'RandomForestClassifier' in tuning_ranges:
                 models.append(RandomForestClassifier(n_estimators=500, oob_score=True, n_jobs=njobs))
             if 'GbcAutoNtrees' in tuning_ranges:
