@@ -355,10 +355,10 @@ class ClassificationSuite(BasePredictorSuite):
             except ValueError:
                 'Must supply one of n_features or tuning_ranges.'
             # use default values for grid search over tuning parameters for all models
-            tuning_ranges = {'LogisticRegression': {'C': list(np.logspace(-3.0, 0.0, 5))},
+            tuning_ranges = {'LogisticRegression': {'C': list(np.logspace(-2.0, 1.0, 5))},
                              'DecisionTreeClassifier': {'max_depth': [5, 10, 20, 50, None]},
-                             'LinearSVC': {'C': list(np.logspace(-3.0, 0.0, 5))},
-                             'SVC': {'C': list(np.logspace(-3.0, 0.0, 5)),
+                             'LinearSVC': {'C': list(np.logspace(-2.0, 1.0, 5))},
+                             'SVC': {'C': list(np.logspace(-2.0, 1.0, 5)),
                                      'gamma': list(np.logspace(np.log10(1.0 / n_features),
                                                                np.log10(1000.0 / n_features), 5))},
                              'RandomForestClassifier': {'max_features':

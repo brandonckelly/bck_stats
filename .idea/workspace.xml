@@ -28,7 +28,7 @@
       <file leaf-file-name="sklearn_estimator_suite.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/bck_stats/sklearn_estimator_suite.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="375" column="29" selection-start="20099" selection-end="20099" vertical-scroll-proportion="0.83576643" vertical-offset="4938" max-vertical-offset="6645">
+            <state line="357" column="41" selection-start="18761" selection-end="18761" vertical-scroll-proportion="0.3248175" vertical-offset="5088" max-vertical-offset="6645">
               <folding>
                 <element signature="e#29#47#0" expanded="true" />
               </folding>
@@ -59,7 +59,7 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="147" />
+    <option name="x" value="269" />
     <option name="y" value="22" />
     <option name="width" value="1424" />
     <option name="height" value="940" />
@@ -90,7 +90,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -125,6 +124,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="RunManager">
@@ -157,7 +157,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="147" y="22" width="1424" height="940" extended-state="0" />
+    <frame x="269" y="22" width="1424" height="940" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -189,6 +189,15 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/bck_stats/sklearn_estimator_suite.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="375" column="29" selection-start="20099" selection-end="20099" vertical-scroll-proportion="0.0" vertical-offset="5088" max-vertical-offset="6645">
+          <folding>
+            <element signature="e#29#47#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/bck_stats/sklearn_estimator_suite.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="186" column="26" selection-start="9825" selection-end="9825" vertical-scroll-proportion="0.0" vertical-offset="2580" max-vertical-offset="6645">
@@ -290,7 +299,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/bck_stats/sklearn_estimator_suite.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="375" column="29" selection-start="20099" selection-end="20099" vertical-scroll-proportion="0.83576643" vertical-offset="4938" max-vertical-offset="6645">
+        <state line="357" column="41" selection-start="18761" selection-end="18761" vertical-scroll-proportion="0.3248175" vertical-offset="5088" max-vertical-offset="6645">
           <folding>
             <element signature="e#29#47#0" expanded="true" />
           </folding>
