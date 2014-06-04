@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import time
 
 
-@jit("f8(f8[:], f8[:])")
+@jit
 def dynamic_time_warping(tseries1, tseries2):
     dtw = np.zeros((len(tseries1), len(tseries2)), dtype=np.float)  # matrix of coordinate distances
     path = np.zeros((len(tseries1), len(tseries2)), dtype=np.int)  # path of algorithm
