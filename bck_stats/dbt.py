@@ -8,6 +8,15 @@ import time
 
 @jit
 def dynamic_time_warping(tseries1, tseries2):
+    """
+    Compute the dynamic time warping (DTW) distance between two time series. It is assumed that the time series are
+    evenly sampled, but they can have different lengths. Numba is used to speed up the computation, so you must have
+    Numba installed.
+
+    :param tseries1: The first time series, a numpy array.
+    :param tseries2: The second time series, a numpy array.
+    :return: A tuple containing the DTW distance, the DTW matrix, and the path matrix taken by the algorithm.
+    """
     dtw = np.zeros((len(tseries1), len(tseries2)), dtype=np.float)  # matrix of coordinate distances
     path = np.zeros((len(tseries1), len(tseries2)), dtype=np.int)  # path of algorithm
 
@@ -55,6 +64,19 @@ def dynamic_time_warping(tseries1, tseries2):
 class DBA(object):
 
     def __init__(self, max_iter, tol=1e-4, verbose=False):
+        """
+        Constructor for the DBA class. This class computes the dynamic time warping (DTW) barycenter averaging (DBA)
+        strategy for averaging a set of evenly-sampled time series. The method is described in
+
+        "A global averaging method for dynamic time warping, with applications to clustering." Petitjean, F.,
+            Ketterlin, A., & Gancarski, P. 2011, Pattern Recognition, 44, 678-693.
+
+        :param max_iter: The maximum number of iterations for the DBA algorithm.
+        :param tol: The tolerance level for the algorithm. The algorithm terminates once the fractional difference in
+            the within-group sum of squares between successive iterations is less than tol. The algorithm will also
+            terminate if the maximum number of iterations is exceeded, or if the sum of squares increases.
+        :param verbose: If true, then provide helpful output.
+        """
         self.max_iter = max_iter
         self.tol = tol
         self.average = np.zeros(1)
@@ -62,6 +84,20 @@ class DBA(object):
         self.verbose = verbose
 
     def compute_average(self, tseries, nstarts=1, initial_value=None):
+        """
+        Perform the DBA algorithm to compute the average for a set of time series. The algorithm is a local optimization
+        strategy and thus depends on the initial guess for the average. Improved results can be obtained by using
+        multiple random initial starts.
+
+        :param tseries: The list of time series, a list of numpy arrays.
+        :param nstarts: The number of random starts to use for the DBA algorithm. The average time series that minimizes
+            the within-group sum of squares over the random starts is returned and saved.
+        :param initial_value: The initial value for the DBA algorithm, a numpy array. If None, then the initial values
+             will be drawn randomly from the set of input time series (recommended). Note that is an initial guess is
+             supplied, then the nstarts parameter is ignored.
+        :return: The estimated average of the time series, defined to minimize the within-group sum of squares of the
+            input set of time series.
+        """
         if initial_value is not None:
             nstarts = 1
 
@@ -75,9 +111,9 @@ class DBA(object):
         for i in range(nstarts):
             print i, '...'
             if initial_value is None:
-                self._compute_average(tseries, tseries[start_idx[i]])
+                self._run_dba(tseries, tseries[start_idx[i]])
             else:
-                self._compute_average(tseries, initial_value)
+                self._run_dba(tseries, initial_value)
             if self.wgss < best_wgss:
                 # found better average, save it
                 if self.verbose:
@@ -90,7 +126,8 @@ class DBA(object):
 
         return best_average
 
-    def _compute_average(self, tseries, initial_value):
+    def _run_dba(self, tseries, initial_value):
+        """ Perform the DBA algorithm. """
         nseries = len(tseries)
 
         self.average = initial_value
@@ -123,8 +160,8 @@ class DBA(object):
         self.wgss = wgss
 
     def _dba_iteration(self, tseries):
+        """ Perform a single iteration of the DBA algorithm. """
         ntime = len(self.average)
-        nseries = len(tseries)
 
         # table telling us which elements of the time series are identified with a specific element of the DBA average
         assoc_table = []
@@ -183,7 +220,7 @@ if __name__ == "__main__":
 
     print 'DBA algorithm took', t2 - t1, 'seconds.'
 
-    for i in range(10):
+    for i in range(nseries):
         plt.plot(t_list[i], ts_list[i], '.', ms=2)
     t = np.linspace(0.0, 10.0, len(dba_avg))
     plt.plot(t, dba_avg, 'k', lw=3)
