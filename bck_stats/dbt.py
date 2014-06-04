@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt
 import time
 
 
-@jit
+@jit("f8(f8[:], f8[:])")
 def dynamic_time_warping(tseries1, tseries2):
-    dtw = np.zeros((len(tseries1), len(tseries2)))  # matrix of coordinate distances
+    dtw = np.zeros((len(tseries1), len(tseries2)), dtype=np.float)  # matrix of coordinate distances
     path = np.zeros((len(tseries1), len(tseries2)), dtype=np.int)  # path of algorithm
 
     # initialize the first row and column
@@ -26,9 +26,26 @@ def dynamic_time_warping(tseries1, tseries2):
     # main loop of the DTW algorithm
     for i in range(1, len(tseries1)):
         for j in range(1, len(tseries2)):
-            neighbors = np.array([dtw[i-1, j-1], dtw[i, j-1], dtw[i-1, j]])
-            idx = neighbors.argmin()
-            dtw[i, j] = (tseries1[i] - tseries2[j]) ** 2 + neighbors[idx]
+            a = dtw[i-1, j-1]
+            b = dtw[i, j]
+            c = dtw[i-1, j]
+            if a < b:
+                if a < c:
+                    idx = 0  # a is the minimum
+                    delta = a
+                else:
+                    idx = 2  # c is the minimum
+                    delta = c
+            else:
+                if b < c:
+                    idx = 1  # b is the minimum
+                    delta = b
+                else:
+                    idx = 2  # c is the minimum
+                    delta = c
+            # neighbors = np.array([dtw[i-1, j-1], dtw[i, j-1], dtw[i-1, j]])
+            # idx = np.argmin(neighbors)
+            dtw[i, j] = (tseries1[i] - tseries2[j]) ** 2 + delta
             path[i, j] = idx
 
     return dtw[-1, -1], dtw, path
@@ -118,7 +135,7 @@ class DBA(object):
 if __name__ == "__main__":
     # run on some test data
     nseries = 100
-    ntime = 200
+    ntime = 2000
     phase = 0.1 + 0.2 * np.random.uniform(0.0, 1.0, nseries) - 0.1
     period = np.pi / 2.0 + np.pi / 10.0 * np.random.standard_normal(nseries)
 
@@ -128,6 +145,15 @@ if __name__ == "__main__":
     tseries = np.zeros((nseries, ntime))
     for i in range(nseries):
         tseries[i] = np.sin(t / period[i] + phase[i]) + noise_amplitude * np.random.standard_normal(ntime)
+
+    t1 = time.clock()
+    for i in range(1):
+        print i
+        dtw_dist = dynamic_time_warping(tseries[0], tseries[1])
+    t2 = time.clock()
+    print 'DTW algorithm tool', t2 - t1, 'seconds.'
+
+    exit()
 
     niter = 5
     dba = DBA(niter, verbose=True)
