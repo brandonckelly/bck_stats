@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 def mae_loss(y, yfit):
     return np.mean(np.abs(y - yfit))
 
-
 def signed_loss(y, yfit):
     # useful for testing if we correctly predict the sign of the returns on a trade
     return np.mean(np.sign(y) == np.sign(yfit))
@@ -45,16 +44,25 @@ class DynamicLinearModel(object):
 
         return X
 
-    def fit(self, X, y, delta=None, include_constant=None):
+    def fit(self, X, y, method='smoother', delta=None, include_constant=None):
         """
         Fit the coefficients for the dynamic linear model.
 
+        @param method: The method used to estimate the dynamic coefficients, either 'smoother' or 'filter'. If
+            'smoother', then the Kalman Smoother is used, otherwise the Kalman Filter will be used. The two differ
+             in the fact that the Kalman Smoother uses both future and past data, while the Kalman Filter only uses
+             past data.
         @param X: The time-varying covariates, and (ntime, pfeat) array.
         @param y: The time-varying response, a 1-D array with ntime elements.
         @param delta: The regularization parameters on the time variation of the coefficients. Default is
             self.delta.
         @param include_constant: Boolean, if true then include a constant in the regression model.
         """
+        try:
+            method.lower() in ['smoother', 'filter']
+        except ValueError:
+            "method must be either 'smoother' or 'filter'."
+
         if delta is None:
             delta = self.delta
         else:
@@ -91,7 +99,10 @@ class DynamicLinearModel(object):
                                        transition_covariance=transition_covariance)
 
         kalman.em(y)
-        beta, beta_covar = kalman.filter(y)
+        if method is 'smoother':
+            beta, beta_covar = kalman.smooth(y)
+        else:
+            beta, beta_covar = kalman.filter(y)
         self.beta = beta
         self.beta_cov = beta_covar
         self.current_beta = beta[-1]
