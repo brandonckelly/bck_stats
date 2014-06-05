@@ -3,14 +3,46 @@ __author__ = 'brandonkelly'
 import numpy as np
 import pykalman
 import matplotlib.pyplot as plt
+import multiprocessing
 
 
 def mae_loss(y, yfit):
     return np.mean(np.abs(y - yfit))
 
-def signed_loss(y, yfit):
-    # useful for testing if we correctly predict the sign of the returns on a trade
-    return np.mean(np.sign(y) == np.sign(yfit))
+
+def _train_predict_dlm(args):
+    """
+    Helper function to train and predict the dynamic linear model for a train and test set. Seperated from the main
+    class to enable the use of the multiprocessing module. This should not be called directly.
+    """
+    delta, X, y, ntrain, loss = args
+    print delta
+    dlm = DynamicLinearModel(include_constant=False)
+
+    # first fit using the training data
+    dlm.fit(X[:ntrain], y[:ntrain], delta=delta, method='filter')
+
+    # now run the filter on the whole data set
+    ntime, pfeat = X.shape
+    observation_matrix = X.reshape((ntime, 1, pfeat))
+    k = dlm.kalman
+    kalman = pykalman.KalmanFilter(transition_matrices=k.transition_matrices,
+                                   observation_matrices=observation_matrix,
+                                   observation_offsets=k.observation_offsets,
+                                   transition_offsets=k.transition_offsets,
+                                   observation_covariance=k.observation_covariance,
+                                   transition_covariance=k.transition_covariance,
+                                   initial_state_mean=k.initial_state_mean,
+                                   initial_state_covariance=k.initial_state_covariance)
+
+    beta, bcov = kalman.filter(y)
+
+    # predict the y-values in the test set
+    yfit = np.sum(beta[ntrain-1:-1] * X[ntrain-1:-1], axis=1)
+
+    test_error = loss(y[ntrain:], yfit)
+
+    return test_error
 
 
 class DynamicLinearModel(object):
@@ -78,7 +110,6 @@ class DynamicLinearModel(object):
         else:
             Xtemp = X.copy()
 
-        # TODO: move to a separate program for multiprocessing
         ntime, pfeat = Xtemp.shape
 
         observation_matrix = Xtemp.reshape((ntime, 1, pfeat))
@@ -105,7 +136,6 @@ class DynamicLinearModel(object):
         else:
             beta, beta_covar = kalman.filter(y)
 
-        # TODO: separate program ends here.
         self.beta = beta
         self.beta_cov = beta_covar
         self.current_beta = beta[-1]
@@ -147,7 +177,8 @@ class DynamicLinearModel(object):
 
         return np.sum(self.current_beta * xpredict)
 
-    def choose_delta(self, X, y, test_fraction=0.5, verbose=False, ndeltas=20, include_constant=True, loss=mae_loss):
+    def choose_delta(self, X, y, test_fraction=0.5, verbose=False, ndeltas=20, include_constant=True, loss=mae_loss,
+                     njobs=1):
         """
         Choose the optimal regularization parameters for the linear smoother coefficients by minimizing an input loss
         function on a test set.
@@ -160,12 +191,20 @@ class DynamicLinearModel(object):
         @param include_constant: Boolean, include a constant in the linear model?
         @param loss: The loss function to use for evaluating the test error when choosing the regularization parameter.
             Must be of the form result = loss(ytest, yfit).
+        @param njobs: The number of processors to use when doing the search over delta. If njobs = -1, all processors
+            will be used.
         """
 
         if include_constant is None:
             include_constant = self.include_constant
         else:
             self.include_constant = include_constant
+
+        if njobs < 0:
+            njobs = multiprocessing.cpu_count()
+
+        pool = multiprocessing.Pool(njobs)
+        pool.map(int, range(njobs))  # warm up the pool
 
         # split y into training and test sets
         ntime = y.size
@@ -175,35 +214,27 @@ class DynamicLinearModel(object):
             XX = X.reshape((X.size, 1))
         else:
             XX = X.copy()
-        ytrain, ytest = y[0:ntrain], y[ntrain:]
-        Xtrain, Xtest = XX[0:ntrain, :], XX[ntrain:, :]
 
         if include_constant:
-            # add column of ones to test feature array
-            Xtest = self.add_constant_(Xtest)
+            # add column of ones to feature array
+            XX = self.add_constant_(XX)
 
         # grid of delta (regularization) values, between 1e-4 and 1.0.
         delta_grid = np.logspace(-4.0, np.log10(0.95), ndeltas)
-        test_grid = np.zeros(delta_grid.size)
+
+        args = []
+        for d in xrange(ndeltas):
+            args.append((delta_grid[d], XX, y, ntrain, loss))
 
         if verbose:
             print 'Computing test errors...'
-        for d in xrange(ndeltas):
-            if verbose:
-                print d
-            self.fit(Xtrain, ytrain, delta=delta_grid[d], include_constant=include_constant)
-            # run the on-line kalman filter on the test set
-            yfit = np.zeros(ntest)
-            for i in xrange(ntest):
-                self.include_constant = False  # make sure we don't add another column of ones to Xtest in self.update()
-                # predict next observation
-                yfit[i] = self.predict(Xtest[i, :])
-                # now update the kalman filter
-                self.update(ytest[i], Xtest[i, :])
-                self.include_constant = include_constant  # restore value
 
-            test_grid[d] = loss(ytest, yfit)
+        if njobs == 1:
+            test_grid = map(_train_predict_dlm, args)
+        else:
+            test_grid = pool.map(_train_predict_dlm, args)
 
+        test_grid = np.array(test_grid)
         self.delta = delta_grid[test_grid.argmin()]
         self.test_error_ = test_grid.min()
 
@@ -254,7 +285,7 @@ if __name__ == "__main__":
     plt.clf()
 
     dynamic = DynamicLinearModel(include_constant=False)
-    dynamic.choose_delta(np.ones(len(y)), y, test_fraction=0.5, verbose=True, ndeltas=20)
+    dynamic.choose_delta(np.ones(len(y)), y, test_fraction=0.5, verbose=True, ndeltas=20, njobs=5)
     dynamic.fit(np.ones(len(y)), y)
 
     plt.semilogx(dynamic.delta_grid, dynamic.test_grid)
