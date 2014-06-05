@@ -78,6 +78,7 @@ class DynamicLinearModel(object):
         else:
             Xtemp = X.copy()
 
+        # TODO: move to a separate program for multiprocessing
         ntime, pfeat = Xtemp.shape
 
         observation_matrix = Xtemp.reshape((ntime, 1, pfeat))
@@ -103,6 +104,8 @@ class DynamicLinearModel(object):
             beta, beta_covar = kalman.smooth(y)
         else:
             beta, beta_covar = kalman.filter(y)
+
+        # TODO: separate program ends here.
         self.beta = beta
         self.beta_cov = beta_covar
         self.current_beta = beta[-1]
