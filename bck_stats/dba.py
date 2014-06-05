@@ -120,7 +120,7 @@ class DBA(object):
             if dba_length is not None:
                 # linearly interpolate initial average value to the requested length
                 lininterp = interp1d(np.arange(len(iseries)), iseries)
-                iseries = lininterp(np.arange(dba_length))
+                iseries = lininterp(np.linspace(0.0, len(iseries)-1.01, num=dba_length))
 
             self._run_dba(tseries, iseries)
 
@@ -225,7 +225,7 @@ if __name__ == "__main__":
     niter = 30
     dba = DBA(niter, verbose=True, tol=1e-4)
     t1 = time.clock()
-    dba_avg = dba.compute_average(ts_list, nstarts=5)
+    dba_avg = dba.compute_average(ts_list, nstarts=5, dba_length=1000)
     t2 = time.clock()
 
     print 'DBA algorithm took', t2 - t1, 'seconds.'
