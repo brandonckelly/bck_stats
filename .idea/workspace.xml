@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="047fd201-dd74-4894-b08f-be8529e03905" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bck_stats/dynamic_linear_model.py" afterPath="$PROJECT_DIR$/bck_stats/dynamic_linear_model.py" />
-    </list>
+    <list default="true" id="047fd201-dd74-4894-b08f-be8529e03905" name="Default" comment="" />
     <ignored path="bck_stats.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -61,8 +59,8 @@
       <file leaf-file-name="dynamic_linear_model.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/bck_stats/dynamic_linear_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.15839493" vertical-offset="0" max-vertical-offset="4125">
-              <caret line="10" column="24" selection-start-line="10" selection-start-column="24" selection-end-line="10" selection-end-column="24" />
+            <state vertical-scroll-proportion="0.38014784" vertical-offset="0" max-vertical-offset="4125">
+              <caret line="24" column="37" selection-start-line="24" selection-start-column="37" selection-end-line="24" selection-end-column="37" />
               <folding>
                 <element signature="e#29#47#0" expanded="true" />
               </folding>
@@ -657,8 +655,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/bck_stats/dynamic_linear_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.15839493" vertical-offset="0" max-vertical-offset="4125">
-          <caret line="10" column="24" selection-start-line="10" selection-start-column="24" selection-end-line="10" selection-end-column="24" />
+        <state vertical-scroll-proportion="0.38014784" vertical-offset="0" max-vertical-offset="4125">
+          <caret line="24" column="37" selection-start-line="24" selection-start-column="37" selection-end-line="24" selection-end-column="37" />
           <folding>
             <element signature="e#29#47#0" expanded="true" />
           </folding>
