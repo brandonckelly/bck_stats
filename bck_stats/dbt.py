@@ -3,6 +3,7 @@ __author__ = 'brandonkelly'
 import numpy as np
 from numba import jit
 import matplotlib.pyplot as plt
+from scipy.interpolate import interp1d
 import time
 
 
@@ -83,7 +84,7 @@ class DBA(object):
         self.wgss = 0.0  # the within-group sum of squares, called the inertia in the clustering literature
         self.verbose = verbose
 
-    def compute_average(self, tseries, nstarts=1, initial_value=None):
+    def compute_average(self, tseries, nstarts=1, initial_value=None, dba_length=None):
         """
         Perform the DBA algorithm to compute the average for a set of time series. The algorithm is a local optimization
         strategy and thus depends on the initial guess for the average. Improved results can be obtained by using
@@ -95,6 +96,8 @@ class DBA(object):
         :param initial_value: The initial value for the DBA algorithm, a numpy array. If None, then the initial values
              will be drawn randomly from the set of input time series (recommended). Note that is an initial guess is
              supplied, then the nstarts parameter is ignored.
+        :param dba_length: The length of the DBA average time series. If None, this will be set to the length of the
+            initial_value array. Otherwise, the initial value array will be linearly interpolated to this length.
         :return: The estimated average of the time series, defined to minimize the within-group sum of squares of the
             input set of time series.
         """
@@ -111,9 +114,16 @@ class DBA(object):
         for i in range(nstarts):
             print i, '...'
             if initial_value is None:
-                self._run_dba(tseries, tseries[start_idx[i]])
+                iseries = tseries[start_idx[i]]
             else:
-                self._run_dba(tseries, initial_value)
+                iseries = initial_value
+            if dba_length is not None:
+                # linearly interpolate initial average value to the requested length
+                lininterp = interp1d(np.arange(len(iseries)), iseries)
+                iseries = lininterp(np.arange(dba_length))
+
+            self._run_dba(tseries, iseries)
+
             if self.wgss < best_wgss:
                 # found better average, save it
                 if self.verbose:
