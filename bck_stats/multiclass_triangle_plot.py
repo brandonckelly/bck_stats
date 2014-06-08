@@ -58,10 +58,10 @@ def multiclass_triangle(xs, classes, labels=None, verbose=True, fig=None, **kwar
         ax = axes[i, i]
         # Plot the histograms.
         n = []
-        for k in class_labels:
+        for l, k in enumerate(class_labels):
             n_k, b_k, p_k = ax.hist(x[classes == k], bins=kwargs.get("bins", 50),
                                     range=extents[i], histtype="step",
-                                    color=color_list[k], lw=2)
+                                    color=color_list[l], lw=2)
             n.append(n_k)
 
         # Set up the axes.
@@ -88,8 +88,8 @@ def multiclass_triangle(xs, classes, labels=None, verbose=True, fig=None, **kwar
             elif j == i:
                 continue
 
-            for k in class_labels:
-                ax.plot(y[classes == k], x[classes == k], 'o', ms=1.5, color=color_list[k], rasterized=True, alpha=0.25)
+            for l, k in enumerate(class_labels):
+                ax.plot(y[classes == k], x[classes == k], 'o', ms=1.5, color=color_list[l], rasterized=True, alpha=0.25)
 
             extent = [[y.min(), y.max()], [x.min(), x.max()]]
             ax.set_xlim(extent[0])

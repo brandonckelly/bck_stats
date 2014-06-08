@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="047fd201-dd74-4894-b08f-be8529e03905" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bck_stats/sklearn_estimator_suite.py" afterPath="$PROJECT_DIR$/bck_stats/sklearn_estimator_suite.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bck_stats/multiclass_triangle_plot.py" afterPath="$PROJECT_DIR$/bck_stats/multiclass_triangle_plot.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/lib/bck_stats/sklearn_estimator_suite.py" afterPath="$PROJECT_DIR$/build/lib/bck_stats/sklearn_estimator_suite.py" />
     </list>
     <ignored path="bck_stats.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -26,10 +26,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="sklearn_estimator_suite.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="sklearn_estimator_suite.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bck_stats/sklearn_estimator_suite.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.48811013" vertical-offset="540" max-vertical-offset="7035">
+            <state vertical-scroll-proportion="0.0" vertical-offset="540" max-vertical-offset="7035">
               <caret line="62" column="37" selection-start-line="62" selection-start-column="37" selection-end-line="62" selection-end-column="37" />
               <folding>
                 <element signature="e#29#47#0" expanded="true" />
@@ -48,11 +48,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="multiclass_triangle_plot.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="multiclass_triangle_plot.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/bck_stats/multiclass_triangle_plot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="345" max-vertical-offset="1815">
-              <caret line="23" column="42" selection-start-line="23" selection-start-column="42" selection-end-line="23" selection-end-column="42" />
+            <state vertical-scroll-proportion="0.32082793" vertical-offset="1012" max-vertical-offset="1785">
+              <caret line="86" column="24" selection-start-line="86" selection-start-column="24" selection-end-line="86" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -73,9 +73,7 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0" vertical-offset="2681" max-vertical-offset="3630">
               <caret line="224" column="14" selection-start-line="224" selection-start-column="14" selection-end-line="224" selection-end-column="14" />
-              <folding>
-                <element signature="e#29#47#0" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -102,6 +100,7 @@
         <option value="$PROJECT_DIR$/bck_stats/dynamic_linear_model.py" />
         <option value="$PROJECT_DIR$/bck_stats/dba.py" />
         <option value="$PROJECT_DIR$/bck_stats/sklearn_estimator_suite.py" />
+        <option value="$PROJECT_DIR$/bck_stats/multiclass_triangle_plot.py" />
       </list>
     </option>
   </component>
@@ -137,6 +136,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -171,7 +171,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -435,9 +434,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1646" max-vertical-offset="3630">
           <caret line="122" column="20" selection-start-line="122" selection-start-column="20" selection-end-line="122" selection-end-column="20" />
-          <folding>
-            <element signature="e#29#47#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -780,14 +777,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bck_stats/multiclass_triangle_plot.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="300" max-vertical-offset="1785">
-          <caret line="23" column="42" selection-start-line="23" selection-start-column="42" selection-end-line="23" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/anaconda/lib/python2.7/site-packages/pykalman/standard.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.30136988" vertical-offset="16589" max-vertical-offset="23010">
@@ -807,7 +796,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="6949" max-vertical-offset="14385">
           <caret line="477" column="0" selection-start-line="477" selection-start-column="0" selection-end-line="477" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -815,19 +803,25 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2681" max-vertical-offset="3630">
           <caret line="224" column="14" selection-start-line="224" selection-start-column="14" selection-end-line="224" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bck_stats/sklearn_estimator_suite.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="540" max-vertical-offset="7035">
+          <caret line="62" column="37" selection-start-line="62" selection-start-column="37" selection-end-line="62" selection-end-column="37" />
           <folding>
             <element signature="e#29#47#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bck_stats/sklearn_estimator_suite.py">
+    <entry file="file://$PROJECT_DIR$/bck_stats/multiclass_triangle_plot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.48811013" vertical-offset="540" max-vertical-offset="7035">
-          <caret line="62" column="37" selection-start-line="62" selection-start-column="37" selection-end-line="62" selection-end-column="37" />
-          <folding>
-            <element signature="e#29#47#0" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.32082793" vertical-offset="1012" max-vertical-offset="1785">
+          <caret line="86" column="24" selection-start-line="86" selection-start-column="24" selection-end-line="86" selection-end-column="24" />
+          <folding />
         </state>
       </provider>
     </entry>
