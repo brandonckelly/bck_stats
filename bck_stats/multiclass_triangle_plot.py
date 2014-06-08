@@ -61,7 +61,7 @@ def multiclass_triangle(xs, classes, labels=None, verbose=True, fig=None, **kwar
         for l, k in enumerate(class_labels):
             n_k, b_k, p_k = ax.hist(x[classes == k], bins=kwargs.get("bins", 50),
                                     range=extents[i], histtype="step",
-                                    color=color_list[l], lw=2)
+                                    color=color_list[l], lw=2, normed=True)
             n.append(n_k)
 
         # Set up the axes.

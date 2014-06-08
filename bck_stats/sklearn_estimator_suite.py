@@ -5,10 +5,11 @@ import abc
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.grid_search import GridSearchCV, ParameterGrid
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, GradientBoostingRegressor
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, GradientBoostingRegressor, \
+    RandomForestRegressor
 from sklearn.svm import SVC, LinearSVC
-from sklearn.metrics import accuracy_score, make_scorer
+from sklearn.metrics import accuracy_score, make_scorer, mean_absolute_error, mean_squared_error
 from sklearn.cross_validation import KFold
 from sklearn.base import clone
 
@@ -47,10 +48,13 @@ class GbrAutoNtrees(GradientBoostingRegressor):
     Same as GradientBoostingRegressor, but the number of estimators is chosen automatically by maximizing the
     out-of-bag score.
     """
-    def __init__(self, subsample, loss='ls', learning_rate=0.01, n_estimators=500, min_samples_split=2,
-                 min_samples_leaf=1, max_depth=3, init=None, random_state=None, max_features=None, verbose=0):
+
+    def __init__(self, subsample, loss='ls', learning_rate=0.1, n_estimators=100, min_samples_split=2,
+                 min_samples_leaf=1, max_depth=3, init=None, random_state=None, max_features=None, alpha=0.9,
+                 verbose=0):
         super(GbrAutoNtrees, self).__init__(loss, learning_rate, n_estimators, subsample, min_samples_split,
-                                            min_samples_leaf, max_depth, init, random_state, max_features, verbose)
+                                            min_samples_leaf, max_depth, init, random_state, max_features, alpha,
+                                            verbose)
 
     def fit(self, X, y):
 
@@ -437,7 +441,7 @@ class ClassificationSuite(BasePredictorSuite):
             weights = self.best_scores
 
         if self.stack:
-            # combine  the model outputs
+            # combine the model outputs
             y_votes = np.zeros((X.shape[0], len(self.model_names)))
             for name in y_predict_all:
                 vote = y_predict_all[name]
@@ -460,5 +464,64 @@ class ClassificationSuite(BasePredictorSuite):
 
 class RegressionSuite(BasePredictorSuite):
 
-    def __init__(self):
-        raise NotImplementedError()
+    def __init__(self, n_features=None, tuning_ranges=None, models=None, cv=None, njobs=1, pre_dispatch='2*n_jobs',
+                 stack=True, verbose=False, metric='lad'):
+        try:
+            metric.lower() in ['lad', 'mse']
+        except ValueError:
+            'Metric must be either lad or mse.'
+
+        if tuning_ranges is None:
+            try:
+                n_features is not None
+            except ValueError:
+                'Must supply one of n_features or tuning_ranges.'
+            # use default values for grid search over tuning parameters for all models
+            tuning_ranges = {'DecisionTreeClassifier': {'max_depth': [5, 10, 20, 50, None]},
+                             'RandomForestRegressor': {'max_features':
+                                                       list(np.unique(np.linspace(2, n_features, 5).astype(np.int)))},
+                             'GbrAutoNtrees': {'max_depth': [1, 2, 3, 5, 10]}}
+        if models is None:
+            # initialize the list of sklearn objects corresponding to different statistical models
+            models = []
+            if 'DecisionTreeRegressor' in tuning_ranges:
+                models.append(DecisionTreeRegressor())
+            if 'RandomForestRegressor' in tuning_ranges:
+                models.append(RandomForestRegressor(n_estimators=500, oob_score=True, n_jobs=njobs))
+            if 'GbrAutoNtrees' in tuning_ranges:
+                models.append(GbrAutoNtrees(subsample=0.75, n_estimators=500, learning_rate=0.01))
+
+        super(RegressionSuite, self).__init__(tuning_ranges, models, cv, njobs, pre_dispatch, stack, verbose)
+
+        self.scorer = make_scorer(accuracy_score)
+        self.nfeatures = n_features
+        self.metric = metric.lower()
+        if self.metric == 'lad':
+            self.scorer = make_scorer(mean_absolute_error, greater_is_better=False)
+        elif self.metric == 'mse':
+            self.scorer = make_scorer(mean_squared_error, greater_is_better=False)
+
+    def predict(self, X, weights='auto'):
+
+        y_predict_all = super(RegressionSuite, self).predict_all(X)
+
+        if weights is 'uniform':
+            # just use uniform weighting
+            weights = {name: 1.0 for name in self.model_names}
+
+        if weights is 'auto':
+            # weight based on validation score
+            weights = self.best_scores
+
+        if self.stack:
+            # combine the model outputs
+            y_predict = 0.0
+            wsum = 0.0
+            for name in y_predict_all:
+                y_predict += weights[name] * y_predict_all[name]
+                wsum += weights[name]
+            y_predict /= wsum
+        else:
+            y_predict = y_predict_all
+
+        return y_predict
