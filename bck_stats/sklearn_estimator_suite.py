@@ -6,7 +6,7 @@ import abc
 from sklearn.linear_model import LogisticRegression
 from sklearn.grid_search import GridSearchCV, ParameterGrid
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, GradientBoostingRegressor
 from sklearn.svm import SVC, LinearSVC
 from sklearn.metrics import accuracy_score, make_scorer
 from sklearn.cross_validation import KFold
@@ -29,6 +29,32 @@ class GbcAutoNtrees(GradientBoostingClassifier):
     def fit(self, X, y):
 
         super(GbcAutoNtrees, self).fit(X, y)
+        oob_score = np.cumsum(self.oob_improvement_)
+        ntrees = oob_score.argmax() + 1
+        if self.verbose:
+            print 'Chose', ntrees, 'based on the OOB score.'
+        self.n_estimators = ntrees
+        self.estimators_ = self.estimators_[:ntrees]
+
+        # plt.plot(oob_score)
+        # plt.show()
+
+        return self
+
+
+class GbrAutoNtrees(GradientBoostingRegressor):
+    """
+    Same as GradientBoostingRegressor, but the number of estimators is chosen automatically by maximizing the
+    out-of-bag score.
+    """
+    def __init__(self, subsample, loss='ls', learning_rate=0.01, n_estimators=500, min_samples_split=2,
+                 min_samples_leaf=1, max_depth=3, init=None, random_state=None, max_features=None, verbose=0):
+        super(GbrAutoNtrees, self).__init__(loss, learning_rate, n_estimators, subsample, min_samples_split,
+                                            min_samples_leaf, max_depth, init, random_state, max_features, verbose)
+
+    def fit(self, X, y):
+
+        super(GbrAutoNtrees, self).fit(X, y)
         oob_score = np.cumsum(self.oob_improvement_)
         ntrees = oob_score.argmax() + 1
         if self.verbose:
