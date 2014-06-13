@@ -154,6 +154,40 @@ class DBA(object):
 
         return best_average
 
+    def associate_segments(self, tseries):
+        """
+        Identify the indices of the inputs time series that are associated with each element of the average time series.
+
+        :param tseries: The times series for which the indices associated with the average are desired. A numpy array.
+        :return: A list-of-lists containing the indices of the input time series that are associated with the elements
+            of the DBA average. Call this assoc_table. Then assoc_table[i] will return a list of the indices of the
+            input time series that are associated with the element i of the DBA average (i.e., self.average[i]).
+        """
+        dtw_dist, dtw, path = dynamic_time_warping(self.average, tseries)
+
+        # table telling us which elements of the time series are identified with a specific element of the DBA average
+        assoc_table = []
+        for i in range(ntime):
+            assoc_table.append([])
+
+        i = self.average.shape[0] - 1
+        j = tseries.shape[0] - 1
+
+        while i >= 0 and j >= 0:
+            assoc_table[i].append(j)
+            if path[i, j] == 0:
+                i -= 1
+                j -= 1
+            elif path[i, j] == 1:
+                j -= 1
+            elif path[i, j] == 2:
+                i -= 1
+            else:
+                # should not happen, but just in case make sure we bail once path[i, j] = -1
+                break
+
+        return assoc_table
+
     def _run_dba(self, tseries, initial_value):
         """ Perform the DBA algorithm. """
         nseries = len(tseries)
@@ -226,7 +260,7 @@ class DBA(object):
 if __name__ == "__main__":
     # run on some test data
     nseries = 40
-    ntime0 = 1000
+    ntime0 = 100
     phase1 = 0.1 + 0.2 * np.random.uniform(0.0, 1.0, nseries) - 0.1
     period1 = np.pi / 4.0 + np.pi / 100.0 * np.random.standard_normal(nseries)
 
@@ -269,3 +303,21 @@ if __name__ == "__main__":
         plt.plot(ts[:, 0], ts[:, 1], '.', ms=2)
     plt.plot(dba_avg[:, 0], dba_avg[:, 1], 'ko')
     plt.show()
+    plt.close()
+
+    # find the segments of the first time series identified with each element of the average
+    assoc = dba.associate_segments(ts_list[0])
+    plt.subplot(221)
+    t = t_list[0]
+    ts = ts_list[0]
+    for i, a in enumerate(assoc):
+        plt.plot(t[a, 0], ts[a, :], '.', ms=2, label=str(i))
+        plt.plot(np.median(t[a]), dba_avg[i, 0], 'ko')
+    plt.subplot(222)
+    for i, a in enumerate(assoc):
+        plt.plot(t[a, 1], ts[a, 1], '.', ms=2, label=str(i))
+        plt.plot(np.median(t[a]), dba_avg[i, 1], 'ko')
+    plt.subplot(223)
+    for i, a in enumerate(assoc):
+        plt.plot(ts[a, 0], ts[a, 1], '.', ms=2, label=str(i))
+        plt.plot(dba_avg[i, 0], dba_avg[i, 1], 'ko')
