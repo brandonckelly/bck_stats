@@ -12,10 +12,10 @@ def dynamic_time_warping(tseries1, tseries2):
     """
     Compute the dynamic time warping (DTW) distance between two time series. It is assumed that the time series are
     evenly sampled, but they can have different lengths. Numba is used to speed up the computation, so you must have
-    Numba installed.
+    Numba installed. Note that the time series can be multivariate.
 
-    :param tseries1: The first time series, a numpy array.
-    :param tseries2: The second time series, a numpy array.
+    :param tseries1: The first time series, a 1-D or 2-D numpy array.
+    :param tseries2: The second time series, a 1-D or 2-D numpy array.
     :return: A tuple containing the DTW distance, the DTW matrix, and the path matrix taken by the algorithm.
     """
     ntime1, nfeatures = tseries1.shape
@@ -79,7 +79,7 @@ class DBA(object):
     def __init__(self, max_iter, tol=1e-4, verbose=False):
         """
         Constructor for the DBA class. This class computes the dynamic time warping (DTW) barycenter averaging (DBA)
-        strategy for averaging a set of evenly-sampled time series. The method is described in
+        strategy for averaging a set of time series. The method is described in
 
         "A global averaging method for dynamic time warping, with applications to clustering." Petitjean, F.,
             Ketterlin, A., & Gancarski, P. 2011, Pattern Recognition, 44, 678-693.
@@ -102,7 +102,7 @@ class DBA(object):
         strategy and thus depends on the initial guess for the average. Improved results can be obtained by using
         multiple random initial starts.
 
-        :param tseries: The list of time series, a list of numpy arrays.
+        :param tseries: The list of time series, a list of numpy arrays. Can be multivariate time series.
         :param nstarts: The number of random starts to use for the DBA algorithm. The average time series that minimizes
             the within-group sum of squares over the random starts is returned and saved.
         :param initial_value: The initial value for the DBA algorithm, a numpy array. If None, then the initial values

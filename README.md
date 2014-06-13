@@ -11,6 +11,7 @@ Description of routines:
 * `multiclass_triangle_plot`: Plot the lower triangle of a scatterplot matrix, color-coding according to class label. A modified version of Dan Foreman-Mackey's triangle.py routine.
 * `gcv_smoother`: Perform exponential smoothing of a time series. The e-folding time scale is chosen using generalized cross-validation.
 * `dynamic_linear_model`: Class to perform dynamic linear regression via least-squares (Montana, G., et al. *Flexible least squares for temporal data mining and statistical arbitrage.* Expert Systems with Applications 36, 2819, 2009).
+* `dba`: Compute the dynamic time warping barycentric average of a set of time series (Petitjean, F., et al. *A global averaging method for dynamic time warping, with applications to clustering.* Pattern Recognition, 44, 678, 2011). Also contains a function to compute the dynamic time warping distance.
 
 -------------
 Installation
