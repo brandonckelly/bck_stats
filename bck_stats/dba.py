@@ -167,7 +167,7 @@ class DBA(object):
 
         # table telling us which elements of the time series are identified with a specific element of the DBA average
         assoc_table = []
-        for i in range(ntime):
+        for i in range(self.average.shape[0]):
             assoc_table.append([])
 
         i = self.average.shape[0] - 1
@@ -260,7 +260,7 @@ class DBA(object):
 if __name__ == "__main__":
     # run on some test data
     nseries = 40
-    ntime0 = 100
+    ntime0 = 1000
     phase1 = 0.1 + 0.2 * np.random.uniform(0.0, 1.0, nseries) - 0.1
     period1 = np.pi / 4.0 + np.pi / 100.0 * np.random.standard_normal(nseries)
 
@@ -311,13 +311,14 @@ if __name__ == "__main__":
     t = t_list[0]
     ts = ts_list[0]
     for i, a in enumerate(assoc):
-        plt.plot(t[a, 0], ts[a, :], '.', ms=2, label=str(i))
+        plt.plot(t[a], ts[a, 0], '.', label=str(i))
         plt.plot(np.median(t[a]), dba_avg[i, 0], 'ko')
     plt.subplot(222)
     for i, a in enumerate(assoc):
-        plt.plot(t[a, 1], ts[a, 1], '.', ms=2, label=str(i))
+        plt.plot(t[a], ts[a, 1], '.', label=str(i))
         plt.plot(np.median(t[a]), dba_avg[i, 1], 'ko')
     plt.subplot(223)
     for i, a in enumerate(assoc):
-        plt.plot(ts[a, 0], ts[a, 1], '.', ms=2, label=str(i))
+        plt.plot(ts[a, 0], ts[a, 1], '.', label=str(i))
         plt.plot(dba_avg[i, 0], dba_avg[i, 1], 'ko')
+    plt.show()
