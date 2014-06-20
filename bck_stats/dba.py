@@ -134,7 +134,7 @@ class DBA(object):
                 iseries0 = np.atleast_2d(iseries)
                 if iseries0.shape[0] == 1:
                     iseries0 = iseries0.T  # vector, so transpose to shape (ntime, 1)
-                nfeatures = iseries.shape[1]
+                nfeatures = iseries0.shape[1]
                 iseries = np.zeros((dba_length, nfeatures))
                 for k in range(nfeatures):
                     lininterp = interp1d(np.arange(iseries0.shape[0]), iseries0[:, k])
@@ -232,6 +232,8 @@ class DBA(object):
 
         wgss = 0.0  # within group sum of squares from previous iteration, compute here so we don't have to repeat
         for series in tseries:
+            if self.average.shape[1] == 1:
+                series = series[:, np.newaxis]
             dtw_dist, dtw, path = dynamic_time_warping(self.average, series)
             wgss += dtw_dist
             i = ntime - 1
