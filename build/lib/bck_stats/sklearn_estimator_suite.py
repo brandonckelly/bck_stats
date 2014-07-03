@@ -107,11 +107,9 @@ class BasePredictorSuite(object):
         for model in self.models:
             # store the names of the sklearn classes used
             self.model_names.append(model.__class__.__name__)
-            try:
-                # make sure the model names are in the dictionary of tuning parameters
-                model.__class__.__name__ in tuning_ranges
-            except ValueError:
-                'Could not find tuning parameters for', model.__class__.__name__
+            # make sure the model names are in the dictionary of tuning parameters
+            if model.__class__.__name__ not in tuning_ranges:
+                raise ValueError('Could not find tuning parameters for', model.__class__.__name__)
 
         if cv is None:
             cv = 3
@@ -287,10 +285,8 @@ class BasePredictorSuite(object):
         """
         self.nfeatures = X.shape[1]
         ndata = len(y)
-        try:
-            X.shape[0] == ndata
-        except ValueError:
-            'X and y must have same number of rows.'
+        if X.shape[0] != ndata:
+            raise ValueError('X and y must have same number of rows.')
 
         if np.isscalar(n_refinements):
             # use same number of refinements for all models
@@ -466,10 +462,8 @@ class RegressionSuite(BasePredictorSuite):
 
     def __init__(self, n_features=None, tuning_ranges=None, models=None, cv=None, njobs=1, pre_dispatch='2*n_jobs',
                  stack=True, verbose=False, metric='lad'):
-        try:
-            metric.lower() in ['lad', 'mse']
-        except ValueError:
-            'Metric must be either lad or mse.'
+        if metric.lower() not in ['lad', 'mse']:
+            raise ValueError('Metric must be either lad or mse.')
 
         if tuning_ranges is None:
             try:
