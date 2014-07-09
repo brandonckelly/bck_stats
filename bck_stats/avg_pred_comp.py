@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from sklearn.neighbors import NearestNeighbors
 from scipy.spatial.distance import cdist
 from scipy import linalg
+import multiprocessing
 
 
 def distance_matrix(Xvals):
@@ -15,7 +16,8 @@ def distance_matrix(Xvals):
     return Dmat
 
 
-def impact_single_theta(predict, theta, X, p_idx, weights, predict_args=None):
+def impact_single_theta(args):
+    predict, theta, X, p_idx, weights, predict_args = args
     # first compute the matrix of model predictions:
     #   y_predict[i, j] = E(y|u_i, v_j, theta)
     ndata = X.shape[0]
@@ -43,7 +45,12 @@ def impact_single_theta(predict, theta, X, p_idx, weights, predict_args=None):
 
 
 def impact(predict, theta, X, predictors=None, predict_args=None, nneighbors=None, nx=None, ntheta=None,
-           mahalanobis_constant=1.0):
+           mahalanobis_constant=1.0, n_jobs=1):
+
+    if n_jobs < 0:
+        n_jobs = multiprocessing.cpu_count()
+    if n_jobs > 1:
+        pool = multiprocessing.Pool(n_jobs)
 
     if predictors is None:
         # calculate the impact for all the predictors
@@ -85,17 +92,32 @@ def impact(predict, theta, X, predictors=None, predict_args=None, nneighbors=Non
     abs_impacts = np.zeros_like(impacts)
     impact_sigmas = np.zeros_like(impacts)
     abs_impact_sigma = np.zeros_like(impacts)
+    print 'Doing predictor'
     for p_idx in predictors:
-        impact_theta = np.zeros(theta.shape)
-        impact_theta_abs = np.zeros_like(impact_theta)
+        print p_idx, '...'
+        args = []
         for s in range(ntheta):
-            impact_s, abs_impact_s = impact_single_theta(predict, theta[s], X, p_idx, weights, predict_args=predict_args)
-            impact_theta[s] = impact_s
-            impact_theta_abs[s] = abs_impact_s
-        impacts[p_idx] = np.mean(impact_theta)
-        impact_sigmas[p_idx] = np.std(impact_theta)
-        abs_impacts[p_idx] = np.mean(impact_theta_abs)
-        abs_impact_sigma[p_idx] = np.std(impact_theta_abs)
+            args.append([predict, theta[s], X, p_idx, weights, predict_args])
+        if n_jobs == 1:
+            results = map(impact_single_theta, args)
+        else:
+            results = pool.map(impact_single_theta, args)
+        results = np.array(results)
+        impacts[p_idx] = np.mean(results[:, 0])
+        impact_sigmas[p_idx] = np.std(results[:, 0])
+        abs_impacts[p_idx] = np.mean(results[:, 1])
+        abs_impact_sigma[p_idx] = np.std(results[:, 1])
+
+        # impact_theta = np.zeros(theta.shape)
+        # impact_theta_abs = np.zeros_like(impact_theta)
+        # for s in range(ntheta):
+        #     impact_s, abs_impact_s = impact_single_theta(predict, theta[s], X, p_idx, weights, predict_args=predict_args)
+        #     impact_theta[s] = impact_s
+        #     impact_theta_abs[s] = abs_impact_s
+        # impacts[p_idx] = np.mean(impact_theta)
+        # impact_sigmas[p_idx] = np.std(impact_theta)
+        # abs_impacts[p_idx] = np.mean(impact_theta_abs)
+        # abs_impact_sigma[p_idx] = np.std(impact_theta_abs)
 
     return impacts, impact_sigmas, abs_impacts, abs_impact_sigma
 
@@ -123,7 +145,7 @@ if __name__ == "__main__":
 
     # don't include constant term
     impacts, isigmas, abs_impacts, aisigmas = \
-        impact(linear_mean, betas, X[:, 1:], predict_args=(bhat[0],), nneighbors=20)
+        impact(linear_mean, betas, X[:, 1:], predict_args=(bhat[0],), nneighbors=20, n_jobs=4)
     print impacts
     sorted_idx = np.argsort(np.abs(impacts))
 
