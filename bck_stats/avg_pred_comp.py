@@ -33,11 +33,13 @@ def impact_single_theta(predict, theta, X, p_idx, weights, predict_args=None):
 
     u1, u2 = np.meshgrid(u, u)
     transition_sign = np.sign(u2 - u1)
-    numer = np.sum(weights * (y_predict - np.outer(np.ones(ndata), y_predict.diagonal())) * transition_sign)
-    denom = np.sum(weights * (u2 - u1) * np.sign(u2 - u1))
-    # denom = np.sum(weights)
+    y_predict_diff = y_predict - np.outer(np.ones(ndata), y_predict.diagonal())
+    numer = np.sum(weights * y_predict_diff * transition_sign)  # signed version
+    abs_numer = np.sum(weights * np.abs(y_predict_diff))  # absolute version
+    # denom = np.sum(weights * (u2 - u1) * np.sign(u2 - u1))
+    denom = np.sum(weights)
 
-    return numer / denom
+    return numer / denom, abs_numer / denom
 
 
 def impact(predict, theta, X, predictors=None, predict_args=None, nneighbors=None, nx=None, ntheta=None,
@@ -80,15 +82,22 @@ def impact(predict, theta, X, predictors=None, predict_args=None, nneighbors=Non
     weights /= weights.sum(axis=0)  # normalize weights to contribution to impact for each data point is the same
 
     impacts = np.zeros(len(predictors))
+    abs_impacts = np.zeros_like(impacts)
     impact_sigmas = np.zeros_like(impacts)
+    abs_impact_sigma = np.zeros_like(impacts)
     for p_idx in predictors:
         impact_theta = np.zeros(theta.shape)
+        impact_theta_abs = np.zeros_like(impact_theta)
         for s in range(ntheta):
-            impact_theta[s] = impact_single_theta(predict, theta[s], X, p_idx, weights, predict_args=predict_args)
+            impact_s, abs_impact_s = impact_single_theta(predict, theta[s], X, p_idx, weights, predict_args=predict_args)
+            impact_theta[s] = impact_s
+            impact_theta_abs[s] = abs_impact_s
         impacts[p_idx] = np.mean(impact_theta)
         impact_sigmas[p_idx] = np.std(impact_theta)
+        abs_impacts[p_idx] = np.mean(impact_theta_abs)
+        abs_impact_sigma[p_idx] = np.std(impact_theta_abs)
 
-    return impacts, impact_sigmas
+    return impacts, impact_sigmas, abs_impacts, abs_impact_sigma
 
 
 if __name__ == "__main__":
@@ -113,7 +122,9 @@ if __name__ == "__main__":
         return ymean
 
     # don't include constant term
-    impacts, isigmas = impact(linear_mean, betas, X[:, 1:], predict_args=(bhat[0],), nneighbors=20)
+    impacts, isigmas, abs_impacts, aisigmas = \
+        impact(linear_mean, betas, X[:, 1:], predict_args=(bhat[0],), nneighbors=20)
+    print impacts
     sorted_idx = np.argsort(np.abs(impacts))
 
     labels = np.array(['x1', 'x2', 'x3'])[sorted_idx]
